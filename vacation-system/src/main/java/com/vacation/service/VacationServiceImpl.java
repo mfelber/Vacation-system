@@ -1,5 +1,6 @@
 package com.vacation.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class VacationServiceImpl implements VacationService {
 
   @Override
   public PageResponse<VacationResponse> findVacations(final int page, final int size) {
-    Pageable pageable = PageRequest.of(page,size, Sort.by("addedDate").descending());
+    Pageable pageable = PageRequest.of(page,size, Sort.by("addedDate").ascending());
     Page<Vacation> vacation = vacationRepository.findAll(pageable);
     List<VacationResponse> vacationResponses = vacation.stream().map(vacationMapper::toVacationResponse).toList();
     return new PageResponse<>(
@@ -53,6 +54,7 @@ public class VacationServiceImpl implements VacationService {
   @Override
   public List<VacationResponse> findAllVacations() {
     List<Vacation> vacations = vacationRepository.findAll();
+    vacations.sort(Comparator.comparing(Vacation::getAddedDate));
     return vacations.stream()
         .map(vacationMapper::toVacationResponse)
         .toList();
@@ -62,8 +64,9 @@ public class VacationServiceImpl implements VacationService {
   public List<VacationResponse> findVacationsByUserIdNoTeamSelected(final Long userId) {
     // check if user exists in db
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new EntityNotFoundException("User with" + userId + " id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + "not found"));
     List<Vacation> vacations = vacationRepository.findAllByIdNoTeamId(userId);
+    vacations.sort(Comparator.comparing(Vacation::getAddedDate));
     return vacations.stream().map(vacationMapper::toVacationResponse).toList();
   }
 
@@ -71,23 +74,25 @@ public class VacationServiceImpl implements VacationService {
   public List<VacationResponse> getVacationsByUserIdTeamSelected(final Long teamId, final Long userId) {
     // check if user exists in db
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new EntityNotFoundException("User with" + userId + " id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
     // // check if team exists in db
     Team team = teamRepository.findById(teamId)
-        .orElseThrow(() -> new EntityNotFoundException("Team with" + teamId + " id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("Team with id " + teamId + " not found"));
     // // check if user exists in this team in db
     if (!userRepository.existsByIdAndTeamId(userId,teamId)) {
       throw new EntityNotFoundException("User with id " + userId + " is not part of team with id " + teamId);
     }
     List<Vacation> vacations = vacationRepository.getVacationsByUserIdTeamSelected(teamId, userId);
+    vacations.sort(Comparator.comparing(Vacation::getAddedDate));
     return vacations.stream().map(vacationMapper::toVacationResponse).toList();
   }
 
   @Override
   public List<VacationResponse> getAllVacationByTeamId(final Long teamId) {
     Team team = teamRepository.findById(teamId)
-        .orElseThrow(() -> new EntityNotFoundException("Team with" + teamId + " id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("Team with id " + teamId + " not found"));
     List<Vacation> vacations = vacationRepository.findByTeamId(teamId);
+    vacations.sort(Comparator.comparing(Vacation::getAddedDate));
     return vacations.stream().map(vacationMapper::toVacationResponse).toList();
   }
 
@@ -100,7 +105,7 @@ public class VacationServiceImpl implements VacationService {
   @Override
   public void deleteVacation(final Long vacationId) {
     Vacation vacation = vacationRepository.findById(vacationId)
-        .orElseThrow(() -> new EntityNotFoundException("Vacation with id" + vacationId + "not found"));
+        .orElseThrow(() -> new EntityNotFoundException("Vacation with id " + vacationId + " not found"));
     vacationRepository.delete(vacation);
   }
 
