@@ -35,7 +35,7 @@ public class VacationServiceImpl implements VacationService {
   private final VacationMapper vacationMapper;
 
   @Override
-  public PageResponse<VacationResponse> findAllVacations(final int page, final int size) {
+  public PageResponse<VacationResponse> findVacations(final int page, final int size) {
     Pageable pageable = PageRequest.of(page,size, Sort.by("addedDate").descending());
     Page<Vacation> vacation = vacationRepository.findAll(pageable);
     List<VacationResponse> vacationResponses = vacation.stream().map(vacationMapper::toVacationResponse).toList();
@@ -51,7 +51,7 @@ public class VacationServiceImpl implements VacationService {
   }
 
   @Override
-  public List<VacationResponse> findAllVacationss() {
+  public List<VacationResponse> findAllVacations() {
     List<Vacation> vacations = vacationRepository.findAll();
     return vacations.stream()
         .map(vacationMapper::toVacationResponse)

@@ -27,15 +27,15 @@ public class VacationController {
 
   // all vacations no team selected and no user selected
   @GetMapping("/vacations")
-  public ResponseEntity<PageResponse<VacationResponse>> getVacations(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+  public ResponseEntity<PageResponse<VacationResponse>> getAllVacations(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
       @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
-    return ResponseEntity.ok(vacationService.findAllVacations(page, size));
+    return ResponseEntity.ok(vacationService.findVacations(page, size));
   }
 
   // all vacations no team selected and no user selected
-  @GetMapping("/vacationss")
-  public ResponseEntity<List<VacationResponse>> getVacationss() {
-    return ResponseEntity.ok(vacationService.findAllVacationss());
+  @GetMapping("/all-vacations")
+  public ResponseEntity<List<VacationResponse>> getVacations() {
+    return ResponseEntity.ok(vacationService.findAllVacations());
   }
 
   // all vacations no team selected and user selected
