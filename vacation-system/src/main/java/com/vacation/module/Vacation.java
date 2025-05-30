@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.vacation.enums.DayType;
 import com.vacation.enums.Status;
 
 import jakarta.persistence.Column;
@@ -17,7 +18,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,8 +44,14 @@ public class Vacation {
   @Column(nullable = false, updatable = false)
   private Date firstDate;
 
+  @Enumerated(EnumType.STRING)
+  private DayType firstDayType;
+
   @Column(nullable = false, updatable = false)
   private Date lastDate;
+
+  @Enumerated(EnumType.STRING)
+  private DayType lastDayType;
 
   private Double days;
 

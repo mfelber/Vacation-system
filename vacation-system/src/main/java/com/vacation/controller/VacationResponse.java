@@ -2,6 +2,7 @@ package com.vacation.controller;
 
 import java.util.Date;
 
+import com.vacation.enums.DayType;
 import com.vacation.enums.Status;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +22,9 @@ public class VacationResponse {
   private Date addedDate;
   private Status status;
   private Date firstDate;
+  private DayType firstDayType;
   private Date lastDate;
+  private DayType lastDayType;
   private Double days;
   private String approvedByD;
   private String approvedByM;

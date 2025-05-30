@@ -1,8 +1,6 @@
 package com.vacation.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.vacation.controller.VacationMapper;
+import com.vacation.controller.VacationRequest;
 import com.vacation.controller.VacationResponse;
 import com.vacation.module.Team;
 import com.vacation.module.User;
@@ -63,7 +62,7 @@ public class VacationServiceImpl implements VacationService {
   public List<VacationResponse> findVacationsByUserIdNoTeamSelected(final Long userId) {
     // check if user exists in db
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new EntityNotFoundException("User with this id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("User with" + userId + " id not found"));
     List<Vacation> vacations = vacationRepository.findAllByIdNoTeamId(userId);
     return vacations.stream().map(vacationMapper::toVacationResponse).toList();
   }
@@ -72,16 +71,37 @@ public class VacationServiceImpl implements VacationService {
   public List<VacationResponse> getVacationsByUserIdTeamSelected(final Long teamId, final Long userId) {
     // check if user exists in db
     User user = userRepository.findById(userId)
-        .orElseThrow(() -> new EntityNotFoundException("User with this id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("User with" + userId + " id not found"));
     // // check if team exists in db
     Team team = teamRepository.findById(teamId)
-        .orElseThrow(() -> new EntityNotFoundException("Team with this id not found"));
+        .orElseThrow(() -> new EntityNotFoundException("Team with" + teamId + " id not found"));
     // // check if user exists in this team in db
     if (!userRepository.existsByIdAndTeamId(userId,teamId)) {
-      throw new EntityNotFoundException("User with this id not found in this team");
+      throw new EntityNotFoundException("User with id " + userId + " is not part of team with id " + teamId);
     }
     List<Vacation> vacations = vacationRepository.getVacationsByUserIdTeamSelected(teamId, userId);
     return vacations.stream().map(vacationMapper::toVacationResponse).toList();
+  }
+
+  @Override
+  public List<VacationResponse> getAllVacationByTeamId(final Long teamId) {
+    Team team = teamRepository.findById(teamId)
+        .orElseThrow(() -> new EntityNotFoundException("Team with" + teamId + " id not found"));
+    List<Vacation> vacations = vacationRepository.findByTeamId(teamId);
+    return vacations.stream().map(vacationMapper::toVacationResponse).toList();
+  }
+
+  @Override
+  public Long saveVacation(final VacationRequest vacationRequest) {
+    Vacation vacation = vacationMapper.toVacation(vacationRequest);
+    return vacationRepository.save(vacation).getId();
+  }
+
+  @Override
+  public void deleteVacation(final Long vacationId) {
+    Vacation vacation = vacationRepository.findById(vacationId)
+        .orElseThrow(() -> new EntityNotFoundException("Vacation with id" + vacationId + "not found"));
+    vacationRepository.delete(vacation);
   }
 
 }
