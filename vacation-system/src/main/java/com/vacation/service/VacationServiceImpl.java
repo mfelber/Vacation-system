@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.vacation.controller.VacationMapper;
-import com.vacation.controller.VacationRequest;
-import com.vacation.controller.VacationResponse;
+import com.vacation.controller.vacation.VacationMapper;
+import com.vacation.controller.vacation.VacationRequest;
+import com.vacation.controller.vacation.VacationResponse;
 import com.vacation.module.Team;
 import com.vacation.module.User;
 import com.vacation.module.Vacation;

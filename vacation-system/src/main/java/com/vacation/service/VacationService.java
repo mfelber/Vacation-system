@@ -2,8 +2,8 @@ package com.vacation.service;
 
 import java.util.List;
 
-import com.vacation.controller.VacationRequest;
-import com.vacation.controller.VacationResponse;
+import com.vacation.controller.vacation.VacationRequest;
+import com.vacation.controller.vacation.VacationResponse;
 import com.vacation.page.PageResponse;
 
 import jakarta.validation.Valid;

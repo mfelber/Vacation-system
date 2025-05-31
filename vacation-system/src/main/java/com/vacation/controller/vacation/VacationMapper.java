@@ -1,4 +1,4 @@
-package com.vacation.controller;
+package com.vacation.controller.vacation;
 
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
