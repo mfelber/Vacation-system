@@ -21,8 +21,8 @@ public class TeamServiceImpl implements TeamService {
 
   @Override
   public List<TeamResponse> findAllTeams() {
-    List<Team> users = teamRepository.findAll();
-    return users.stream()
+    List<Team> teams = teamRepository.findAll();
+    return teams.stream()
         .map(teamMapper::toTeamResponse)
         .toList();
   }
